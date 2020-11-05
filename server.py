@@ -1,42 +1,21 @@
-import requests
-import json
+"""Server for game app."""
+
+from flask import Flask, render_template, request, flash, session, redirect
+from model import connect_to_db
+# import crud
+from jinja2 import StrictUndefined
+
+app = Flask(__name__)
+app.secret_key = "ranchdressing"
+app.jinja_env.undefined = StrictUndefined
+
+@app.route('/')
+def homepage():
+    """View Homepage"""
+
+    return render_template('homepage.html')
 
 
-#*  WORKS
-# genre_res = requests.get('https://api.rawg.io/api/genres')
-# # print(res)
-
-# genre_results = genre_res.json()
-# # print(search_results['results'])
-
-# for genre in genre_results['results']:
-#     print(genre['name'])
-#     print(genre['games_count'])
-#     print(genre['image_background'])
-
-
-games_res = requests.get('https://api.rawg.io/api/games')
-
-game_results = games_res.json()
-
-#*  WORKS
-# for game in game_results['results']:
-#     print(game['name'])
-#     print(game['background_image'])
-
-
-for i in game_results['esrb_rating']:
-    print(i)
-
-# for game in game_results['results']:
-#     print(game['platforms'][0]['platform']['name'])
-
-
-# ! https://api.rawg.io/api/genres/{id}
-# Get details of the genre.
-# ! https://api.rawg.io/api/platforms
-# Get a list of video game platforms.
-# ! https://api.rawg.io/api/developers
-# Get a list of game developers.
-# ! https://api.rawg.io/api/developers/{id}
-# Get details of the developer.
+if __name__ == '__main__':
+    connect_to_db(app)
+    app.run(host='0.0.0.0', debug=True)

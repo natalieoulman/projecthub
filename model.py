@@ -101,7 +101,7 @@ class Genres(db.Model):
                         autoincrement=True,)
     genre_name = db.Column(db.String, nullable=False)
     genre_img = db.Column(db.String)
-    genre_descrition = db.Column(db.Text, nullable=False)
+    genre_description = db.Column(db.Text, nullable=False)
 
     preferred_rel = db.relationship('Preferences')
 
