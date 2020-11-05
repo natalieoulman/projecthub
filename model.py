@@ -1,14 +1,13 @@
 """Models for movie ratings app."""
 
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 
 db = SQLAlchemy()
 
 
 class Users(db.Model):
     """A user."""
-
+#Users('natalie', 'oulman', 'ahh@ahh.ahh', 'ahh')
     __tablename__ = "user"
 
     user_id = db.Column(db.Integer,
@@ -19,14 +18,14 @@ class Users(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False,)
     password = db.Column(db.String, nullable=False)
 
-    user_like_rel = db.relationship('User_Likes')
-    pref_rel = d.relationship('Preferences')
+    user_like_rel = db.relationship('UserLikes')
+    pref_rel = db.relationship('Preferences')
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
 
 
-class Users_Likes(db.Model):
+class UserLikes(db.Model):
     """A user's liked games."""
 
     __tablename__ = "user_like"
@@ -35,7 +34,7 @@ class Users_Likes(db.Model):
                         primary_key=True,
                         autoincrement=True,)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    liked_game = db.Column(db.String, db.ForeignKey('videogame.videogame_id'))
+    liked_game = db.Column(db.Integer, db.ForeignKey('videogame.videogame_id'))
 
     users_rel = db.relationship('Users')
     videogames_rel = db.relationship('Videogames')
@@ -54,11 +53,10 @@ class Preferences(db.Model):
                         primary_key=True,
                         autoincrement=True,)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    preferred_genre = db.Column(db.String, db.ForeignKey('genre.genre_id'))
+    preferred_genre = db.Column(db.Integer, db.ForeignKey('genre.genre_id'))
 
     users_rel = db.relationship('Users')
     genre_rel = db.relationship('Genres')
-    videogames_rel = db.relationship('Videogames')
 
 
     def __repr__(self):
@@ -74,17 +72,17 @@ class Videogames(db.Model):
                         primary_key=True,
                         autoincrement=True,)
     game_title = db.Column(db.String, nullable=False)
-    game_platforms = db.Column(db.String, db.ForeignKey('platform.platform_id'), nullable=False)
+    game_platforms = db.Column(db.Integer, db.ForeignKey('platform.platform_id'), nullable=False)
     game_img = db.Column(db.String)
-    game_genre = db.Column(db.String, db.ForeignKey('genre.genre_id'), nullable=False)
+    game_genre = db.Column(db.Integer, db.ForeignKey('genre.genre_id'), nullable=False)
     game_developer = db.Column(db.String, nullable=False)
-    game_description = db.Column(db.Text, nullable=False)
-    esrb_rating = db.Column(db.String, dr.ForeignKey('esrb.esrb_id'), nullable=False)
+    game_description = db.Column(db.Text, nullable=True)
+    esrb_rating = db.Column(db.Integer, db.ForeignKey('esrb.esrb_id'), nullable=False)
 
-    user_likes_rel = db.relationship('User_Likes')
-    platform_rel = db.relationship('Platform_Codes')
+    user_likes_rel = db.relationship('UserLikes')
+    platform_rel = db.relationship('PlatformCodes')
     genre_rel = db.relationship('Genres')
-    esrb_rel = db.relationship('Esrb_Codes')
+    esrb_rel = db.relationship('EsrbCodes')
 
 
     def __repr__(self):
@@ -101,7 +99,7 @@ class Genres(db.Model):
                         autoincrement=True,)
     genre_name = db.Column(db.String, nullable=False)
     genre_img = db.Column(db.String)
-    genre_description = db.Column(db.Text, nullable=False)
+    genre_description = db.Column(db.Text, nullable=True)
 
     preferred_rel = db.relationship('Preferences')
 
@@ -109,7 +107,7 @@ class Genres(db.Model):
     def __repr__(self):
         return f'Genres genre_id={self.genre_id} genre_name={self.genre_name}'
 
-class Platform_Codes(db.Model):
+class PlatformCodes(db.Model):
     """A device's platform code."""
 
     __tablename__ = "platform"
@@ -126,7 +124,7 @@ class Platform_Codes(db.Model):
         return f'Platform Codes platform_id={self.platform_id} platform_name={self.platform_name}'
 
 
-class Esrb_Codes(db.Model):
+class EsrbCodes(db.Model):
     """A game's ESRB rating."""
 
     __tablename__ = "esrb"
@@ -143,7 +141,7 @@ class Esrb_Codes(db.Model):
         return f'<ESRB Codes esrb_id={self.esrb_id} esrb_name={esrb_name}>'
 
 
-def connect_to_db(flask_app, db_uri='postgresql:///ratings', echo=True):
+def connect_to_db(flask_app, db_uri='postgresql:///gameapp', echo=True):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     flask_app.config['SQLALCHEMY_ECHO'] = echo
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
