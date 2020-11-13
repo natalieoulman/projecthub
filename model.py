@@ -1,144 +1,107 @@
-"""Models for movie ratings app."""
+"""Models for game app."""
 
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 
-class Users(db.Model):
+class User(db.Model):
     """A user."""
-#Users('natalie', 'oulman', 'ahh@ahh.ahh', 'ahh')
-    __tablename__ = "user"
+    __tablename__ = "users"
 
-    user_id = db.Column(db.Integer,
-                        primary_key=True,
-                        autoincrement=True,)
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fname = db.Column(db.String(30), nullable=False)
     lname = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False,)
     password = db.Column(db.String, nullable=False)
 
-    user_like_rel = db.relationship('UserLikes')
-    pref_rel = db.relationship('Preferences')
+    #user_like_rel = db.relationship('UserLikes')
+    #pref_rel = db.relationship('Preferences')
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
 
 
-class UserLikes(db.Model):
-    """A user's liked games."""
+# class UserLikes(db.Model):
+#     """A user's liked games."""
 
-    __tablename__ = "user_like"
+#     __tablename__ = "user_like"
 
-    user_favorite_id = db.Column(db.Integer,
-                        primary_key=True,
-                        autoincrement=True,)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    liked_game = db.Column(db.Integer, db.ForeignKey('videogame.videogame_id'))
+#     user_favorite_id = db.Column(db.Integer,
+#                         primary_key=True,
+#                         autoincrement=True,)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+#     liked_game = db.Column(db.Integer, db.ForeignKey('videogame.videogame_id'))
 
-    users_rel = db.relationship('Users')
-    videogames_rel = db.relationship('Videogames')
-
-
-    def __repr__(self):
-        return f'<Users Likes user_favorite_id={self.user_favorite_id} liked_game={self.liked_game}>'
+#     users_rel = db.relationship('Users')
+#     videogames_rel = db.relationship('Videogames')
 
 
-class Preferences(db.Model):
-    """A user's preferred genre."""
-
-    __tablename__ = 'preference'
-
-    preference_id = db.Column(db.Integer,
-                        primary_key=True,
-                        autoincrement=True,)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    preferred_genre = db.Column(db.Integer, db.ForeignKey('genre.genre_id'))
-
-    users_rel = db.relationship('Users')
-    genre_rel = db.relationship('Genres')
+#     def __repr__(self):
+#         return f'<Users Likes user_favorite_id={self.user_favorite_id} liked_game={self.liked_game}>'
 
 
-    def __repr__(self):
-        return f'<Preferences preference_id={self.preference_id} preferred_genre={self.preferred_genre}>'
+# class Preferences(db.Model):
+#     """A user's preferred genre."""
+
+#     __tablename__ = 'preference'
+
+#     preference_id = db.Column(db.Integer,
+#                         primary_key=True,
+#                         autoincrement=True,)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+#     preferred_genre = db.Column(db.Integer, db.ForeignKey('genre.genre_id'))
+
+#     users_rel = db.relationship('Users')
+#     genre_rel = db.relationship('Genres')
 
 
-class Videogames(db.Model):
+#     def __repr__(self):
+#         return f'<Preferences preference_id={self.preference_id} preferred_genre={self.preferred_genre}>'
+
+
+class Videogame(db.Model):
     """A videogame."""
 
-    __tablename__ = "videogame"
+    __tablename__ = "videogames"
 
     videogame_id = db.Column(db.Integer,
                         primary_key=True,
                         autoincrement=True,)
     game_title = db.Column(db.String, nullable=False)
-    game_platforms = db.Column(db.Integer, db.ForeignKey('platform.platform_id'), nullable=False)
     game_img = db.Column(db.String)
-    game_genre = db.Column(db.Integer, db.ForeignKey('genre.genre_id'), nullable=False)
-    game_developer = db.Column(db.String, nullable=False)
     game_description = db.Column(db.Text, nullable=True)
-    esrb_rating = db.Column(db.Integer, db.ForeignKey('esrb.esrb_id'), nullable=False)
+    game_api_id = db.Column(db.Integer)
+    game_genre = db.Column(db.Integer, db.ForeignKey('genres.genre_id'), nullable=False)
+    game_platform = db.Column(db.String, nullable=True)
+    esrb_name = db.Column(db.String, nullable=True)
 
-    user_likes_rel = db.relationship('UserLikes')
-    platform_rel = db.relationship('PlatformCodes')
-    genre_rel = db.relationship('Genres')
-    esrb_rel = db.relationship('EsrbCodes')
+    # user_likes_rel = db.relationship('UserLikes')
+    genre_rel = db.relationship('Genre')
 
 
     def __repr__(self):
         return f'<Videogames videogame_id={self.videogame_id} game_title={self.game_title}>'
 
 
-class Genres(db.Model):
+class Genre(db.Model):
     """A game's genre."""
 
-    __tablename__ = "genre"
+    __tablename__ = "genres"
 
     genre_id = db.Column(db.Integer,
                         primary_key=True,
-                        autoincrement=True,)
-    genre_name = db.Column(db.String, nullable=False)
+                        autoincrement=True)
+    genre_name = db.Column(db.String, nullable=True)
     genre_img = db.Column(db.String)
     genre_description = db.Column(db.Text, nullable=True)
+    genre_api_id = db.Column(db.Integer)
 
-    preferred_rel = db.relationship('Preferences')
-
-
-    def __repr__(self):
-        return f'Genres genre_id={self.genre_id} genre_name={self.genre_name}'
-
-class PlatformCodes(db.Model):
-    """A device's platform code."""
-
-    __tablename__ = "platform"
-
-    platform_id = db.Column(db.Integer,
-                        primary_key=True,
-                        autoincrement=True,)
-    platform_name = db.Column(db.String, nullable=False)
-
-    videogames_rel = db.relationship('Videogames')
-
+    # preferred_rel = db.relationship('Preferences')
+    videogame_rel = db.relationship('Videogame')
 
     def __repr__(self):
-        return f'Platform Codes platform_id={self.platform_id} platform_name={self.platform_name}'
-
-
-class EsrbCodes(db.Model):
-    """A game's ESRB rating."""
-
-    __tablename__ = "esrb"
-
-    esrb_id = db.Column(db.Integer,
-                        primary_key=True,
-                        autoincrement=True,)
-    esrb_name = db.Column(db.String, nullable=False)
-    esrb_description = db.Column(db.Text, nullable=False)
-
-    videogames_rel = db.relationship('Videogames')
-
-    def __repr__(self):
-        return f'<ESRB Codes esrb_id={self.esrb_id} esrb_name={esrb_name}>'
+        return f'Genre genre_id={self.genre_id} genre_name={self.genre_name}'
 
 
 def connect_to_db(flask_app, db_uri='postgresql:///gameapp', echo=True):
@@ -159,3 +122,4 @@ if __name__ == '__main__':
     # query it executes.
 
     connect_to_db(app)
+    db.create_all()

@@ -4,15 +4,16 @@ import os
 import json
 from datetime import datetime
 import requests
-# import psycopg2
+
 import crud
 import model
 import server
 
-os.system('dropdb gameapp')
-os.system('createdb gameapp')
+# os.system('dropdb gameapp')
+# os.system('createdb gameapp')
 model.connect_to_db(server.app)
 model.db.create_all()
+
 
 genre_res = requests.get('https://api.rawg.io/api/genres')
 genre_results = genre_res.json()
@@ -20,64 +21,74 @@ genre_results = genre_res.json()
 games_res = requests.get('https://api.rawg.io/api/games')
 game_results = games_res.json()
 
-platform_res = requests.get('https://api.rawg.io/api/platforms')
-platform_results = platform_res.json()
-
-developer_res = requests.get('https://api.rawg.io/api/developers')
-developer_results = developer_res.json()
-
-
-# Creates a unique user email and password
-
+# Creates a user email and password
 for n in range(10):
     email = f'user{n}@test.com'
-    password = 'test'
-    fname = 'test'
-    lname = 'test'
+    password = 'test pw'
+    fname = 'test name'
+    lname = 'test lname'
 
     crud.create_user(fname, lname, email, password)
 
-# #Adds genres to a list
-# genres_in_db = []
-# for genre in genre_results['results']:
-#     genre_title, genre_img = ((genre['name']),
-#                              (genre['image_background']))
+#Seeds in genre info to the db
+genres_in_db = []
 
-#     db_genre = crud.create_genre(genre_title,
-#                                  genre_img)
-#     genres_in_db.append(db_genre)
+for genre in genre_results['results']:
+    #print(genre['id'])
+    genre_api_id = genre['id']
+    genre_id_link = f'https://api.rawg.io/api/genres/{genre_api_id}'
 
-# #Adds games to a list
-# games_in_db = []
-# for game in game_results['results']:
-#     game_title, game_img = ((game['name']),
-#                            (game['background_image']))
+    #print(genre_id_link)
+    genre_desc_res = requests.get(genre_id_link)
+    genre_desc_results = genre_desc_res.json()
 
-#     db_game = crud.create_games(game_title,
-#                                 game_img)
-#     games_in_db.append(db_game)
-
-# #Adds platforms to a list
-# platforms_in_db = []
-# for platform in platform_results['results']:
-
-#     platform_name = (platform['name'])
-
-#     db_platform = crud.create_platform(platform_name)
-
-#     platforms_in_db.append(db_platform)
-
-# #Adds developers to a list
-# developers_in_db = []
-# for developer in developer_results['results']:
-#     game_developer = (developer['name'])
-
-#     db_developer = crud.create_developer(game_developer)
-
-#     developers_in_db.append(db_developer)
+    genre_title, genre_img, genre_description, genre_api_id = ((genre['name']),
+                                                               (genre['image_background']),
+                                                               (genre_desc_results['description']),
+                                                               (genre_api_id)
+                                                               )
+    db_genre = crud.create_genre(genre_title,
+                                 genre_img,
+                                 genre_description,
+                                 genre_api_id)
+    genres_in_db.append(db_genre)
 
 
-# # ! https://api.rawg.io/api/developers
-# # Get a list of game developers.
-# # ! https://api.rawg.io/api/developers/{id}
-# # Get details of the developer.
+# #Seeds in game info into the db
+games_in_db = []
+for game in game_results['results']:
+    game_api_id = (game['id'])
+    game_id_link = f'https://api.rawg.io/api/games/{game_api_id}'
+
+    game_desc_res = requests.get(game_id_link)
+    game_desc_results = game_desc_res.json()
+
+
+    game_title, game_img, game_description, game_api_id = ((game['name']),
+                                                           (game['background_image']),
+                                                           (game_desc_results['description']),
+                                                           (game_api_id)
+                                                          )
+    game_genre = genre_api_id
+    game_platform = (game_results['results'][0]['platforms'][0]['platform']['name'])
+    esrb_rating = (game_desc_results['esrb_rating'])
+    if esrb_rating is None:
+        esrb_name = 'NA'
+        db_game = crud.create_games(game_title,
+                                game_img,
+                                game_genre,
+                                game_description,
+                                game_api_id,
+                                game_platform,
+                                esrb_name)
+    else:
+        esrb_name = (game_desc_results['esrb_rating']['name'])
+        db_game = crud.create_games(game_title,
+                                game_img,
+                                game_genre,
+                                game_description,
+                                game_api_id,
+                                game_platform,
+                                esrb_name)
+
+    games_in_db.append(db_game)

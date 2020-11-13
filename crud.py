@@ -1,13 +1,17 @@
 """CRUD operations."""
 
-from model import db, Users, UserLikes, Preferences, Videogames, Genres, PlatformCodes, EsrbCodes, connect_to_db
+
+from model import db, Genre, connect_to_db, User, Videogame
+#UserLikes, Preferences,
 
 
-def create_genre(genre_name, genre_img):
+def create_genre(genre_name, genre_img, genre_description, genre_api_id):
     """Create and return a new genre."""
 
-    genre = Genres(genre_name=genre_name,
-                   genre_img=genre_img)
+    genre = Genre(genre_name=genre_name,
+                   genre_img=genre_img,
+                   genre_description=genre_description,
+                   genre_api_id=genre_api_id)
 
     db.session.add(genre)
     db.session.commit()
@@ -15,11 +19,17 @@ def create_genre(genre_name, genre_img):
     return genre
 
 
-def create_games(game_title, game_img):
+
+def create_games(game_title, game_img, game_genre, game_description, game_api_id, game_platform, esrb_name='NA'):
     """Create and return a new game."""
 
-    game = Videogames(game_title=game_title,
-                      game_img=game_img)
+    game = Videogame(game_title=game_title,
+                      game_img=game_img,
+                      game_genre=game_genre,
+                      game_description=game_description,
+                      game_api_id=game_api_id,
+                      game_platform=game_platform, 
+                      esrb_name=esrb_name)
 
     db.session.add(game)
     db.session.commit()
@@ -27,50 +37,35 @@ def create_games(game_title, game_img):
     return game
 
 
-def create_platform(platform_name):
-    """Create and return a list of platforms"""
+def get_videogame_by_videogame_id(videogame_id):
+    """Return a game by ID"""
+    #should i query into multiple tables?
+    # game = db.session.query(Genre.genre_id, Videogame.videogame_id).join(Videogame).all()
 
-    platform = Platform_Codes(platform_name=platform_name)
 
-    db.session.add(platform)
-    db.session.commit()
+    # return game
+    return Videogame.query.get(videogame_id).all()
 
-    return platform
+def get_genres():
+    """Return all movies."""
 
+    return Genre.query.all()
+
+def get_genre_by_id(genre_id):
+    """Return a genre by ID"""
+
+    return Genre.query.get(genre_id)
 
 def create_user(fname, lname, email, password):
-    """Create and return a new user."""
+    """Create and return a new user"""
 
-    user = Users(fname=fname,
-                 lname=lname,
-                 email=email,
-                 password=password)
+    user = User(fname=fname, lname=lname, email=email, password=password)
 
     db.session.add(user)
     db.session.commit()
 
     return user
 
-def create_developer(game_developer):
-    """Creates and returns game developers"""
-
-    developer = Videogames(game_developer=game_developer)
-
-    db.session.add(developer)
-    db.session.commit()
-
-    return developer
-
-
-def create_esrb_rating(esrb_name, esrb_description):
-
-    esrb = Esrb_Codes(esrb_name=esrb_name,
-                      esrb_description=esrb_description)
-
-    db.session.add(esrb)
-    db.session.commit()
-
-    return esrb
 
 
 if __name__ == '__main__':

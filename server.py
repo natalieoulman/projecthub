@@ -2,8 +2,10 @@
 
 from flask import Flask, render_template, request, flash, session, redirect
 from model import connect_to_db
-# import crud
+import crud
 from jinja2 import StrictUndefined
+import requests
+import json
 
 app = Flask(__name__)
 app.secret_key = "ranchdressing"
@@ -14,6 +16,44 @@ def homepage():
     """View Homepage"""
 
     return render_template('homepage.html')
+
+
+@app.route('/genres')
+def all_genres():
+    """View Genre page."""
+
+    genres = crud.get_genres()
+
+    return render_template('all_genres.html', genres=genres)
+
+
+@app.route('/genres/<genre_id>')
+def get_genre(genre_id):
+    """User's selected genre of choice"""
+
+    #list of dict games
+    games = []
+    user_genre = crud.get_genre_by_id(genre_id)
+
+    # API get request for this genre id, access list of games
+    genre_res = requests.get('https://api.rawg.io/api/genres')
+    genre_results = genre_res.json()
+
+    for genre in genre_results['results']:
+        if genre['id'] == user_genre.genre_api_id:
+            print(genre['games'])
+            for game_dict in genre['games']:
+                game_name = game_dict['name']
+
+                games.append(game_name)
+    # print("GENRE")
+    # print(genre)
+    # print("videogame relationship")
+    # print(genre.videogame_rel)
+    #games = crud.get_videogame_by_id(videogame_id)
+
+    return render_template('chosen_genre.html', user_genre=user_genre, games=games)
+
 
 
 if __name__ == '__main__':
