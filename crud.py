@@ -51,7 +51,7 @@ def get_genres():
 
     return Genre.query.all()
 
-def get_genre_by_id(genre_id):
+def get_genre_by_id():
     """Return a genre by ID"""
 
     return Genre.query.get(genre_id)
