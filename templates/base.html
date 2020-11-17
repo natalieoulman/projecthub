@@ -18,7 +18,13 @@
         <ul>
           <li><a href="/">Return home</a></li>
           <li><a href ="/genres">Genre page</a></li>
+          <li><a href ="/login">Login page</a></li>
         </ul>
+        {% for msg in get_flashed_messages() %}
+        <p class="flash-msg">
+          {{ msg }}
+        </p>
+      {% endfor %}
 
     {% block body %}{% endblock %}
     {% block after_body %}{% endblock %}

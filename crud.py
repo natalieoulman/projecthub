@@ -67,6 +67,15 @@ def create_user(fname, lname, email, password):
     return user
 
 
+def get_specific_user_by_email(email):
+
+    return User.query.filter(User.email == email).first()
+
+
+def get_users_email_and_password(email, password):
+
+    return User.query.filter(User.email == email, User.password == password).all()
+
 
 if __name__ == '__main__':
     from server import app

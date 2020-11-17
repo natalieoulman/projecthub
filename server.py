@@ -22,8 +22,6 @@ def homepage():
 def all_genres():
     """View Genre page."""
 
-
-    
     genres = crud.get_genres()
     genre_value = request.args.get("genres")
 
@@ -31,45 +29,85 @@ def all_genres():
     game_results = games_res.json()
 
     game_name = []
-    # game_image = []
-    # games = []
+    game_image = []
+
 
     for game in game_results['results']:
         game_name.append(game['name'])
-        # game_image.append(game['background_image'])
-        # games.append(game_name)
-        # games.append(game_image)
+        game_image.append(game['background_image'])
 
 
-    return render_template('all_genres.html', genres=genres, game_name=game_name)
+    return render_template('all_genres.html', genres=genres, game_name=game_name, game_image=game_image)
 
 
-@app.route('/genres/<genre_id>')
-def get_genre(genre_id):
-    """User's selected genre of choice"""
+@app.route('/login', methods=['GET', 'POST'])
+def login_user():
 
-    user_genre = crud.get_genre_by_id(genre_id)
-    #list of dict games
-    games = []
+    email = request.form.get('email')
+    password = request.form.get('password')
 
-    # API get request for this genre id, access list of games
-    genre_res = requests.get('https://api.rawg.io/api/genres')
-    genre_results = genre_res.json()
+    #! works with just the email, prints a User object
+    #! USER HERE <br> [<User user_id=11 email=natalie.oulman@gmail.com>]
+    users = crud.get_users_email_and_password(email, password)
+    print("USER HERE")
+    print(users)
+    if email:
+        flash("email yes")
+        return redirect('/genres')
+        #! password part doesn't work
+        #! if users.password == password:
+        #! AttributeError: 'list' object has no attribute 'password'
+        # if users.password == password:
 
 
-    for genre in genre_results['results']:
-        if genre['id'] == user_genre.genre_api_id:
-            # print(genre['games'])
-            for game_dict in genre['games']:
-                game_name = game_dict['name']
-                games.append(game_name)
-    # print("GENRE")
-    # print(genre)
-    # print("videogame relationship")
-    # print(genre.videogame_rel)
-    # games = crud.get_videogame_by_videogame_id(videogame_id)
 
-    return render_template('chosen_genre.html', user_genre=user_genre, games=games)
+
+    # if email in users:
+    #     flash("email yes")
+        # if users.password == password:
+        #     flash("password yes")
+        #     return redirect('/genres')
+
+
+
+    return render_template('login.html')
+
+
+
+ 
+    #     if users.password == password:
+    #         flash('Success')
+    #         redirect('/')
+    #     else:
+    #         flash('Wrong password, try again')
+    # else:
+    #     flash('Your account was not found, please create one')
+    #     return redirect('/')
+
+
+
+
+@app.route('/user', methods=['POST'])
+def register_user():
+    """Create new user"""
+
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    user = crud.get_specific_user_by_email(email)
+
+    if user:
+        flash("You already have an account, stupid")
+    else:
+        crud.create_user(fname, lname, email, password)
+        flash("You now have an account with Movie Info")
+
+    return redirect('/')
+
+
+
 
 
 
