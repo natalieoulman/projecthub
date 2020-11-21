@@ -37,24 +37,13 @@ def create_games(game_title, game_img, game_genre, game_description, game_api_id
     return game
 
 
-def get_videogame_by_videogame_id(videogame_id):
-    """Return a game by ID"""
-    #should i query into multiple tables?
-    # game = db.session.query(Genre.genre_id, Videogame.videogame_id).join(Videogame).all()
-
-
-    # return game
-    return Videogame.query.get(videogame_id).all()
 
 def get_genres():
     """Return all movies."""
 
     return Genre.query.all()
 
-def get_genre_by_id():
-    """Return a genre by ID"""
 
-    return Genre.query.get(genre_id)
 
 def create_user(fname, lname, email, password):
     """Create and return a new user"""
@@ -70,11 +59,6 @@ def create_user(fname, lname, email, password):
 def get_specific_user_by_email(email):
 
     return User.query.filter(User.email == email).first()
-
-
-def get_users_email_and_password(email, password):
-
-    return User.query.filter(User.email == email, User.password == password).all()
 
 
 if __name__ == '__main__':
