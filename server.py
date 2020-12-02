@@ -6,7 +6,6 @@ import crud
 from jinja2 import StrictUndefined
 import requests
 import json
-import urlencode as ude
 
 app = Flask(__name__)
 app.secret_key = "ranchdressing"
@@ -16,8 +15,12 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def homepage():
     """View Homepage"""
+    if "logged_in_user" in session:
+        flash("You're already logged, fool")
+        return redirect('genre-form')
+    else:
+        return render_template('login.html')
 
-    return render_template('homepage.html')
 
 
 @app.route('/genre-form')
@@ -27,7 +30,7 @@ def genre_form():
 
     if "logged_in_user" not in session:
         flash("Please login to view this page")
-        return redirect('/login-form')
+        return redirect('/')
 
     return render_template('all_genres.html', genres=genres)
 
@@ -38,17 +41,17 @@ def all_genres():
 
     if "logged_in_user" not in session:
         flash("Please login to view this page")
-        return redirect('/login-form')
+        return redirect('/')
 
 
     genre_value = request.args.get("genres")
-    print('HEHEHEHEH')
-    print(genre_value)
+    genre_split = genre_value.split()
+    genre = "-".join(genre_split)
 
-    games_res = requests.get(f'https://api.rawg.io/api/games?genres={genre_value}'.lower())
+    games_res = requests.get(f'https://api.rawg.io/api/games?genres={genre}'.lower())
     game_results = games_res.json()
 
-    genre_res = requests.get(f'https://api.rawg.io/api/genres/{genre_value}'.lower())
+    genre_res = requests.get(f'https://api.rawg.io/api/genres/{genre}'.lower())
     genre_results = genre_res.json()
 
     game_name = []
@@ -69,34 +72,20 @@ def game_info():
     """Game Info for selected game"""
 
     game_value = request.args.get("game")
-    # special_char = set('`','~','!','@','#','$','%','^','&','*','(',')','_','-','+','=','{','[','}','}','|','\',':',';','"',''','<',',','>','.','?','/')
-    # for letter in game:
-    #     if letter in special_char:
-            #remove
     game_split = game_value.split()
     game = "-".join(game_split)
 
+
     game_res = requests.get(f'https://api.rawg.io/api/games/{game}'.lower())
-    # print("HEREHEHRHE")
-    # print(game_res)
+
     game_results = game_res.json()
-    # print(game_results)
- 
+
 
     game_name = game_results['name']
     game_desc = game_results['description']
     game_img = game_results['background_image']
 
     return render_template('game.html', game_name=game_name, game_desc=game_desc, game_img=game_img)
-
-@app.route('/login-form')
-def login_form():
-
-    if "logged_in_user" in session:
-        flash("You're already logged, fool")
-        return redirect('/')
-    else:
-        return render_template('login.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -106,6 +95,7 @@ def login_user():
     password = request.form.get('password')
 
     user = crud.get_specific_user_by_email(email)
+    print(user)
 
     if email:
         if user.password == password:
@@ -125,7 +115,7 @@ def logout_user():
 
     if "logged_in_user" not in session:
         flash("Please login to view this page")
-        return redirect('/login-form')
+        return redirect('/')
     else:
         session.pop('logged_in_user', None)
         flash("You're now logged out")
@@ -148,13 +138,48 @@ def register_user():
         flash("You already have an account. Please login")
     else:
         crud.create_user(fname, lname, email, password)
-        flash("You now have an account with GameApp")
+        flash("You now have an account with GameApp, please login to continue.")
 
     return redirect('/')
 
 
 
+@app.route('/user-profile')
+def user_profile():
 
+    liked_games = set()
+
+    if "logged_in_user" not in session:
+        flash("Please login to view this page")
+        return redirect('/')
+
+
+
+    user_id = session["logged_in_user"]
+    logged_user = crud.user_by_id_from_userlikes(user_id)
+
+    for game in logged_user:
+        liked_games.add(game.liked_api_game_name)
+
+
+    return render_template('user_profile.html', liked_games=liked_games)
+
+
+@app.route('/add-to-favorites', methods=['POST'])
+def add_to_favorites():
+
+
+    if "logged_in_user" not in session:
+        flash("Please login to view this page")
+        return redirect('/login-form')
+
+    fav_game_value = request.form.get("fav_game")
+    # print(fav_game_value)
+
+    if fav_game_value:
+        crud.add_favorite_game(session['logged_in_user'], fav_game_value)
+
+    return redirect('/')
 
 
 if __name__ == '__main__':

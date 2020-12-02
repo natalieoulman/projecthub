@@ -1,9 +1,14 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <title>
       {% block title %}{% endblock %}
     </title>
@@ -12,22 +17,49 @@
   </head>
 
   <body>
-
-      <h1>Game App</h1>
-      <h2>Navigation</h2>
-        <ul>
-          <li><a href="/">Return home</a></li>
-          <li><a href ="/genre-form">Genre page</a></li>
-          <li><a href ="/login-form">Login page</a></li>
-          <li><a href ="/logout-form">Logout</a></li>
-        </ul>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">GameApp</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/">Home </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/genre-form">Genres </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user-profile">View Profile </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/">Sign Up </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/">Login </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout-form">Logout</a>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </nav>
         {% for msg in get_flashed_messages() %}
         <p class="flash-msg">
           {{ msg }}
         </p>
       {% endfor %}
-
+      </div>
     {% block body %}{% endblock %}
     {% block after_body %}{% endblock %}
   </body>
 </html>
+
+
+
+

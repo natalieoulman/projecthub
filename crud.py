@@ -1,8 +1,7 @@
 """CRUD operations."""
 
 
-from model import db, Genre, connect_to_db, User, Videogame
-#UserLikes, Preferences,
+from model import db, Genre, connect_to_db, User, Videogame, UserLikes
 
 
 def create_genre(genre_name, genre_img, genre_description, genre_api_id):
@@ -36,6 +35,30 @@ def create_games(game_title, game_img, game_genre, game_description, game_api_id
 
     return game
 
+def user_by_id_from_userlikes(user_id):
+    """Get user by user_id"""
+
+    user_id_from_userlikes = UserLikes.query.filter(UserLikes.user_id == user_id).all()
+
+    return user_id_from_userlikes
+
+
+
+def add_favorite_game(user_id, liked_api_game_name):
+    """Create favorite game for specific user based off user_id"""
+
+
+    liked_game = UserLikes(user_id=user_id, liked_api_game_name=liked_api_game_name)
+
+    db.session.add(liked_game)
+    db.session.commit()
+
+    return liked_game
+
+
+def favorite_games():
+
+    return UserLikes.query.all()
 
 
 def get_genres():

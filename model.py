@@ -15,49 +15,30 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False,)
     password = db.Column(db.String, nullable=False)
 
-    #user_like_rel = db.relationship('UserLikes')
-    #pref_rel = db.relationship('Preferences')
+    user_like_rel = db.relationship('UserLikes')
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
 
 
-# class UserLikes(db.Model):
-#     """A user's liked games."""
+class UserLikes(db.Model):
+    """A user's liked games."""
 
-#     __tablename__ = "user_like"
+    __tablename__ = "user_like"
 
-#     user_favorite_id = db.Column(db.Integer,
-#                         primary_key=True,
-#                         autoincrement=True,)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-#     liked_game = db.Column(db.Integer, db.ForeignKey('videogame.videogame_id'))
+    user_favorite_id = db.Column(db.Integer,
+                        primary_key=True,
+                        autoincrement=True,)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    liked_api_game_name = db.Column(db.String)
 
-#     users_rel = db.relationship('Users')
-#     videogames_rel = db.relationship('Videogames')
-
-
-#     def __repr__(self):
-#         return f'<Users Likes user_favorite_id={self.user_favorite_id} liked_game={self.liked_game}>'
+    users_rel = db.relationship('User')
 
 
-# class Preferences(db.Model):
-#     """A user's preferred genre."""
-
-#     __tablename__ = 'preference'
-
-#     preference_id = db.Column(db.Integer,
-#                         primary_key=True,
-#                         autoincrement=True,)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-#     preferred_genre = db.Column(db.Integer, db.ForeignKey('genre.genre_id'))
-
-#     users_rel = db.relationship('Users')
-#     genre_rel = db.relationship('Genres')
+    def __repr__(self):
+        return f'<Users Likes user_favorite_id={self.user_favorite_id} liked_game={self.liked_api_game_name}>'
 
 
-#     def __repr__(self):
-#         return f'<Preferences preference_id={self.preference_id} preferred_genre={self.preferred_genre}>'
 
 
 class Videogame(db.Model):
@@ -76,7 +57,6 @@ class Videogame(db.Model):
     game_platform = db.Column(db.String, nullable=True)
     esrb_name = db.Column(db.String, nullable=True)
 
-    # user_likes_rel = db.relationship('UserLikes')
     genre_rel = db.relationship('Genre')
 
 
@@ -97,7 +77,6 @@ class Genre(db.Model):
     genre_description = db.Column(db.Text, nullable=True)
     genre_api_id = db.Column(db.Integer)
 
-    # preferred_rel = db.relationship('Preferences')
     videogame_rel = db.relationship('Videogame')
 
     def __repr__(self):
