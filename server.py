@@ -26,11 +26,12 @@ def homepage():
 @app.route('/genre-form')
 def genre_form():
 
-    genres = crud.get_genres()
-
     if "logged_in_user" not in session:
         flash("Please login to view this page")
         return redirect('/')
+
+    genres = crud.get_genres()
+
 
     return render_template('all_genres.html', genres=genres)
 
@@ -103,7 +104,10 @@ def login_user():
             flash("password and email yes")
             return redirect('/genre-form')
 
+@app.route('/signup-form')
+def user_signup():
 
+    return render_template('signup.html')
 
 @app.route('/logout-form')
 def logout_form():
@@ -152,8 +156,6 @@ def user_profile():
     if "logged_in_user" not in session:
         flash("Please login to view this page")
         return redirect('/')
-
-
 
     user_id = session["logged_in_user"]
     logged_user = crud.user_by_id_from_userlikes(user_id)
