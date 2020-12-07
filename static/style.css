@@ -1,0 +1,140 @@
+img {
+    height: 200px;
+    width: 200px;
+}
+
+body.loginpage {
+
+  background-image: url("/static/images/login.jpg");
+  background-size: cover;
+}
+body.allgenre-page {
+  background-color: black;
+}
+#logincolor {
+  color: white;
+}
+#buttoncolor {
+  margin-top: 10%;
+  background-color: #6a097d !important;
+}
+#loginsignup {
+  font-family: 'Roboto Mono', monospace;
+}
+div.container-fluid {
+  font-family: 'Roboto Mono', monospace;
+}
+
+body.logout {
+  background-image: url("/static/images/logout.jpg");
+  background-size: cover;
+ 
+}
+#logopic {
+    height: 20%;
+    width: 20%;
+    top: 1000px;
+    border-radius: 50%;
+}
+
+#genre-title{
+  font-family: 'bukhari_scriptregular';
+  src: url('bukhariscript-regular-webfont.woff2') format('woff2'),
+       url('bukhariscript-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  text-align: center;
+}
+
+#carouselpic {
+    height: 100%;
+    width: 100%;
+}
+
+#genrepic {
+    height: 100%;
+    width: 100%;
+}
+.navbar-brand {
+    font-family: 'bukhari_scriptregular';
+    src: url('bukhariscript-regular-webfont.woff2') format('woff2'),
+         url('bukhariscript-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.dropdown {
+    text-align:center;
+    width: 100%;
+}
+
+.logincontainer {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+.logoutcontainer {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: inline-block;
+  }
+.dropstyle {
+    background-color: #6a097d;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+
+.dropdown {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+  }
+
+.dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+.genre-container {
+    position: relative;
+    text-align: center;
+    color: black;
+  }
+
+.centered-genre {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: black;
+    color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-family: 'bukhari_scriptregular';
+    src: url('bukhariscript-regular-webfont.woff2') format('woff2'),
+         url('bukhariscript-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'bukhari_scriptregular';
+    src: url('bukhariscript-regular-webfont.woff2') format('woff2'),
+         url('bukhariscript-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+

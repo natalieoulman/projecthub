@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Game App Home{% endblock %}
+
+{% block body %}
+
+<body id='loginsignup' class="loginpage">
+    <div class="logincontainer">
+        <div class="row">
+            <div div class="col-md-5 mx-auto">
+                <div id="second">
+                    <div class="logo mb-3">
+                        <div class="col-md-12 text-center">
+                            <h1 id="logincolor">Signup</h1>
+                        </div>
+                    </div>
+                    <form action="/user" name="registration" method="POST">
+                        <div class="form-group">
+                        <label id="logincolor" for="exampleInputEmail1">First Name</label>
+                        <input type="text"  name="fname" class="form-control" id="firstname" aria-describedby="emailHelp" placeholder="First name">
+                        </div>
+                        <div class="form-group">
+                        <label id="logincolor" for="exampleInputEmail1">Last Name</label>
+                        <input type="text"  name="lname" class="form-control" id="lastname" aria-describedby="emailHelp" placeholder="Last name">
+                        </div>
+                        <div class="form-group">
+                        <label id="logincolor" for="exampleInputEmail1">Email address</label>
+                        <input type="email" name="email"  class="form-control" id="email" aria-describedby="emailHelp" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                        <label id="logincolor" for="exampleInputEmail1">Password</label>
+                        <input type="password" name="password" id="password"  class="form-control" aria-describedby="emailHelp" placeholder="Password">
+                        </div>
+                        <div class="col-md-12 text-center">
+                        <button id="buttoncolor" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Create Account</button>
+                        </div>
+                    </form>
+                </div>
+      
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

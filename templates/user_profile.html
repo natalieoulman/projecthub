@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %} {{ session["logged_in_user"] }} Profile {% endblock %}
+
+{% block body %}
+
+
+<body class="allgenre-page">
+    <div id="slides" class="carousel slide" data-ride="carousel">
+        <ul class="carousel-indicators">
+            <li data-target="#slides" data-slide-to="0" class="active"></li>
+            <li data-target="#slides" data-slide-to="1"></li>
+            <li data-target="#slides" data-slide-to="2"></li>
+            <li data-target="#slides" data-slide-to="3"></li>
+            <li data-target="#slides" data-slide-to="4"></li>
+        </ul>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img id="carouselpic" src="/static/images/rise.jpg">
+            </div>
+            <div class="carousel-item">
+                <img id="carouselpic" src="/static/images/limbo.jpg">
+            </div>
+            <div class="carousel-item">
+                <img id="carouselpic" src="/static/images/rayman.jpg">
+            </div>
+            <div class="carousel-item">
+                <img id="carouselpic" src="/static/images/destiny2.jpg">
+            </div>
+            <div class="carousel-item">
+                <img id="carouselpic" src="/static/images/portal2.jpg">
+            </div>
+        </div>
+    </div>
+<div id="logincolor">
+    <h1 id="loginsignup">Your favorite games</h1>
+    {% for game in liked_games %}
+    <li id="loginsignup">
+    {{ game }}
+    </li>
+    {% endfor %}
+</div>
+{% endblock %}

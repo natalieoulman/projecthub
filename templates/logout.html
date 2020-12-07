@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Game App Home{% endblock %}
+
+{% block body %}
+
+<body class="logout" id='loginsignup'>
+    <div class="logoutcontainer">
+        <div class="row">
+            <div class="col-md-5 mx-auto">
+                <div id="third">
+                    <div class="logo mb-3">
+                        <div class="col-md-12 text-center">
+                            <form action='/logout'>
+                                <div>
+                                    <h3 id="logincolor">Would you like to log out?</h3>
+                                    <button id="buttoncolor" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Logout</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
